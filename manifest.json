@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "name": "Get off that Site",
+  "version": "1.0",
+  "description": "Limits time spent on websites based on user-specified durations.",
+  "permissions": [
+    "storage",
+    "tabs",
+    "alarms"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "icons": {
+    "48": "icon.png"
+  }
+}

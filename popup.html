@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Site Time Limiter</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+    input, button {
+      margin: 5px 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h2>Set Time Limit</h2>
+  <input type="text" id="hostname" placeholder="Enter website (e.g., example.com)">
+  <input type="number" id="minutes" placeholder="Enter time limit (minutes)">
+  <button id="setLimit">Set Limit</button>
+  <div id="status"></div>
+  <script src="popup.js"></script>
+</body>
+</html>
