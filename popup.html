@@ -11,10 +11,6 @@
       padding: 10px;
       font-family: Arial, sans-serif;
     }
-    /* input, button {
-      margin: 5px 0;
-      width: 100%;
-    } */
   </style> 
 </head>
 <body>
@@ -22,9 +18,12 @@
     <h2>Set Time Limit</h2>
     <input type="text" id="hostname" placeholder="Enter website (e.g., example.com)" class="form-control mb-3">
     <input type="number" id="minutes" placeholder="Enter time limit (minutes)" class="form-control mb-3">
-    <button id="setLimit" class="btn btn-outline-primary">Set Limit</button>
+    <button id="setLimit" class="btn btn-outline-primary mb-3">Set Limit</button>
+    <div id="status" class="alert alert-info" style="display: none;"></div>
+    
+    <h3 class="mt-4">Blocked Sites</h3>
+    <div id="blockedSites" class="mt-3"></div>
   </div>
-  <div id="status"></div>
   <script src="popup.js"></script>
 </body>
 </html>
