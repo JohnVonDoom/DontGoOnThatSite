@@ -43,6 +43,22 @@ function getTimeUntilMidnight() {
   return midnight.getTime() - now.getTime();
 }
 
+// Function to calculate remaining time for a site
+function getRemainingTime(hostname) {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get('timeLimits', (data) => {
+      const timeLimits = data.timeLimits || {};
+      if (timeLimits[hostname] && timers[hostname]) {
+        const elapsedTime = (Date.now() - timers[hostname].startTime) / 60000; // Convert to minutes
+        const remainingTime = Math.max(0, timeLimits[hostname] - elapsedTime);
+        resolve(Math.round(remainingTime));
+      } else {
+        resolve(timeLimits[hostname] || 0);
+      }
+    });
+  });
+}
+
 // Listen for alarms to check if time limits have been reached
 chrome.alarms.onAlarm.addListener((alarm) => {
   const hostname = alarm.name;
@@ -70,7 +86,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   }
 });
 
-// Listen for messages from the popup to set time limits
+// Listen for messages from the popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "setTimeLimit") {
     chrome.storage.sync.get('timeLimits', (data) => {
@@ -81,6 +97,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === "getBlockedSites") {
     chrome.storage.local.get('blockedSites', (data) => {
       sendResponse({ blockedSites: data.blockedSites || {} });
+    });
+    return true; // Indicates that the response is sent asynchronously
+  } else if (request.action === "unblockSite") {
+    chrome.storage.local.get('blockedSites', (data) => {
+      const blockedSites = data.blockedSites || {};
+      if (blockedSites[request.hostname]) {
+        delete blockedSites[request.hostname];
+        chrome.storage.local.set({ blockedSites: blockedSites }, () => {
+          sendResponse({ success: true });
+        });
+      } else {
+        sendResponse({ success: false });
+      }
+    });
+    return true; // Indicates that the response is sent asynchronously
+  } else if (request.action === "getRemainingTime") {
+    getRemainingTime(request.hostname).then(remainingTime => {
+      sendResponse({ remainingTime: remainingTime });
     });
     return true; // Indicates that the response is sent asynchronously
   }
